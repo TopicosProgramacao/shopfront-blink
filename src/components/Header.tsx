@@ -43,15 +43,19 @@ const Header = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="relative">
-            <UserOutlined className="text-lg" />
-          </Button>
-          <Button variant="default" size="icon" className="relative">
-            <ShoppingCartOutlined className="text-lg" />
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-xs font-medium text-accent-foreground">
-              0
-            </span>
-          </Button>
+          <Link to="/account">
+            <Button variant="ghost" size="icon" className="relative">
+              <UserOutlined className="text-lg" />
+            </Button>
+          </Link>
+          <Link to="/cart">
+            <Button variant="default" size="icon" className="relative">
+              <ShoppingCartOutlined className="text-lg" />
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-xs font-medium text-accent-foreground">
+                0
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

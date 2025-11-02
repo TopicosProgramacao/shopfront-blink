@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Layout, Typography, Button, Modal, Input, Form, notification, Spin, Popconfirm } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
 
@@ -20,6 +20,7 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [form] = Form.useForm();
 
   // Load products from API and LocalStorage on mount
@@ -94,14 +95,22 @@ const Products = () => {
     });
   };
 
-  const productsList = useMemo(() => products, [products]);
+  const productsList = useMemo(() => {
+    if (!searchQuery.trim()) return products;
+    
+    return products.filter(product =>
+      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [products, searchQuery]);
 
   return (
     <Layout className="min-h-screen">
       <Header />
       <Content className="p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-6">
             <Title level={2} className="!mb-0">All Products</Title>
             <Button
               type="primary"
@@ -111,6 +120,17 @@ const Products = () => {
             >
               Add Product
             </Button>
+          </div>
+
+          <div className="mb-8">
+            <Input
+              size="large"
+              placeholder="Search products by name, description, or category..."
+              prefix={<SearchOutlined />}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              allowClear
+            />
           </div>
 
           {loading ? (
