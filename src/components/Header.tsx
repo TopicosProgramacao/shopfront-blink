@@ -1,8 +1,11 @@
 import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button } from '@/components/ui/button';
 import { Package } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
+  const location = useLocation();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -16,18 +19,26 @@ const Header = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <a 
-            href="/" 
-            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          <Link 
+            to="/" 
+            className={`text-sm font-medium transition-colors ${
+              location.pathname === '/' 
+                ? 'text-primary hover:text-primary/80' 
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
             Home
-          </a>
-          <a 
-            href="/shop" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          </Link>
+          <Link 
+            to="/products" 
+            className={`text-sm font-medium transition-colors ${
+              location.pathname === '/products' 
+                ? 'text-primary hover:text-primary/80' 
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
             Shop
-          </a>
+          </Link>
         </nav>
 
         {/* Actions */}
