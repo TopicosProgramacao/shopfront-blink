@@ -152,9 +152,9 @@ const Products = () => {
   }, [products, searchQuery]);
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="min-h-screen bg-background">
       <Header />
-      <Content className="p-8">
+      <Content className="p-8 bg-background text-foreground">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <Title level={2} className="!mb-0">All Products</Title>
