@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Layout, Typography, Button, Modal, Input, Form, notification, Spin, Popconfirm } from 'antd';
-import { PlusOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { Layout, Typography, Button, Modal, Input, Form, notification, Spin, Popconfirm, Drawer } from 'antd';
+import { PlusOutlined, DeleteOutlined, SearchOutlined, EditOutlined } from '@ant-design/icons';
 import Header from '@/components/Header';
 import ProductCard from '@/components/ProductCard';
 
@@ -20,8 +20,11 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
 
   // Load products from API and LocalStorage on mount
   useEffect(() => {
@@ -95,6 +98,49 @@ const Products = () => {
     });
   };
 
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    editForm.setFieldsValue({
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      description: product.description,
+      category: product.category,
+    });
+    setIsDrawerOpen(true);
+  };
+
+  const handleUpdateProduct = async (values: any) => {
+    if (!editingProduct) return;
+
+    const updatedProduct: Product = {
+      ...editingProduct,
+      title: values.title,
+      price: parseFloat(values.price),
+      image: values.image || editingProduct.image,
+      description: values.description || '',
+      category: values.category || 'custom',
+    };
+
+    setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
+    
+    notification.success({
+      message: 'Success',
+      description: 'Product updated successfully!',
+      placement: 'topRight',
+    });
+
+    setIsDrawerOpen(false);
+    setEditingProduct(null);
+    editForm.resetFields();
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setEditingProduct(null);
+    editForm.resetFields();
+  };
+
   const productsList = useMemo(() => {
     if (!searchQuery.trim()) return products;
     
@@ -146,21 +192,28 @@ const Products = () => {
               {productsList.map((product) => (
                 <div key={product.id} className="relative">
                   <ProductCard product={product} />
-                  <Popconfirm
-                    title="Delete Product"
-                    description="Are you sure you want to delete this product?"
-                    onConfirm={() => handleDeleteProduct(product.id)}
-                    okText="Yes"
-                    cancelText="No"
-                    placement="topRight"
-                  >
+                  <div className="absolute top-2 left-2 z-10 flex gap-2">
                     <Button
-                      danger
-                      icon={<DeleteOutlined />}
+                      type="primary"
+                      icon={<EditOutlined />}
                       size="small"
-                      className="absolute top-2 left-2 z-10"
+                      onClick={() => handleEditProduct(product)}
                     />
-                  </Popconfirm>
+                    <Popconfirm
+                      title="Delete Product"
+                      description="Are you sure you want to delete this product?"
+                      onConfirm={() => handleDeleteProduct(product.id)}
+                      okText="Yes"
+                      cancelText="No"
+                      placement="topRight"
+                    >
+                      <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        size="small"
+                      />
+                    </Popconfirm>
+                  </div>
                 </div>
               ))}
             </div>
@@ -232,6 +285,70 @@ const Products = () => {
             </Form.Item>
           </Form>
         </Modal>
+
+        <Drawer
+          title="Edit Product"
+          open={isDrawerOpen}
+          onClose={handleCloseDrawer}
+          width={400}
+        >
+          <Form
+            form={editForm}
+            layout="vertical"
+            onFinish={handleUpdateProduct}
+          >
+            <Form.Item
+              label="Product Name"
+              name="title"
+              rules={[{ required: true, message: 'Please enter product name' }]}
+            >
+              <Input placeholder="Enter product name" />
+            </Form.Item>
+
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[
+                { required: true, message: 'Please enter price' },
+                { pattern: /^\d+(\.\d{1,2})?$/, message: 'Please enter a valid price' }
+              ]}
+            >
+              <Input placeholder="0.00" prefix="$" />
+            </Form.Item>
+
+            <Form.Item
+              label="Image URL"
+              name="image"
+            >
+              <Input placeholder="https://example.com/image.jpg" />
+            </Form.Item>
+
+            <Form.Item
+              label="Description"
+              name="description"
+            >
+              <Input.TextArea rows={4} placeholder="Enter product description" />
+            </Form.Item>
+
+            <Form.Item
+              label="Category"
+              name="category"
+            >
+              <Input placeholder="Enter category" />
+            </Form.Item>
+
+            <Form.Item className="mb-0">
+              <div className="flex justify-end gap-2">
+                <Button onClick={handleCloseDrawer}>
+                  Cancel
+                </Button>
+                <Button type="primary" htmlType="submit">
+                  Update Product
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </Drawer>
       </Content>
     </Layout>
   );

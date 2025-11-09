@@ -1,10 +1,28 @@
 import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button } from '@/components/ui/button';
-import { Package } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Package, Moon, Sun } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
   const location = useLocation();
+  const { getTotalItems } = useCart();
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark';
+  });
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
@@ -39,10 +57,25 @@ const Header = () => {
           >
             Shop
           </Link>
+          <Link 
+            to="/clients" 
+            className={`text-sm font-medium transition-colors ${
+              location.pathname === '/clients' 
+                ? 'text-primary hover:text-primary/80' 
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Clients
+          </Link>
         </nav>
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Sun className="h-4 w-4" />
+            <Switch checked={isDark} onCheckedChange={setIsDark} />
+            <Moon className="h-4 w-4" />
+          </div>
           <Link to="/account">
             <Button variant="ghost" size="icon" className="relative">
               <UserOutlined className="text-lg" />
@@ -51,9 +84,11 @@ const Header = () => {
           <Link to="/cart">
             <Button variant="default" size="icon" className="relative">
               <ShoppingCartOutlined className="text-lg" />
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-xs font-medium text-accent-foreground">
-                0
-              </span>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-xs font-medium text-accent-foreground">
+                  {getTotalItems()}
+                </span>
+              )}
             </Button>
           </Link>
         </div>

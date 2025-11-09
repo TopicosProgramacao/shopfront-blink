@@ -1,14 +1,30 @@
-import { Layout, Typography, Card, Button, Empty } from 'antd';
-import { ShoppingCartOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Layout, Typography, Card, Button, Empty, Modal, InputNumber } from 'antd';
+import { ShoppingCartOutlined, DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import Header from '@/components/Header';
+import { useCart } from '@/contexts/CartContext';
+import { useState } from 'react';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const Cart = () => {
-  const cartItems: any[] = []; // Empty cart for now
+  const { cartItems, removeFromCart, clearCart, getTotalAmount, addToCart } = useCart();
+  const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
 
-  const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const handleCheckout = () => {
+    setCheckoutModalOpen(true);
+  };
+
+  const handleConfirmCheckout = () => {
+    clearCart();
+    setCheckoutModalOpen(false);
+    Modal.success({
+      title: 'Purchase Complete!',
+      content: 'Thank you for your purchase. Your order has been confirmed.',
+    });
+  };
+
+  const totalAmount = getTotalAmount();
 
   return (
     <Layout className="min-h-screen">
@@ -45,13 +61,17 @@ const Cart = () => {
                       <div className="flex-1">
                         <Title level={5} className="!mb-2">{item.title}</Title>
                         <Text type="secondary">Quantity: {item.quantity}</Text>
+                        <div className="mt-2">
+                          <Text strong>${(item.price * item.quantity).toFixed(2)}</Text>
+                        </div>
                       </div>
                       <div className="text-right">
-                        <Title level={4} className="!mb-2">${item.price}</Title>
+                        <Title level={4} className="!mb-2">${item.price.toFixed(2)}</Title>
                         <Button 
                           danger 
                           size="small" 
                           icon={<DeleteOutlined />}
+                          onClick={() => removeFromCart(item.id)}
                         >
                           Remove
                         </Button>
@@ -68,12 +88,38 @@ const Cart = () => {
                     ${totalAmount.toFixed(2)}
                   </Title>
                 </div>
-                <Button type="primary" size="large" block>
-                  Proceed to Checkout
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    danger 
+                    size="large" 
+                    onClick={clearCart}
+                  >
+                    Clear Cart
+                  </Button>
+                  <Button 
+                    type="primary" 
+                    size="large" 
+                    block
+                    onClick={handleCheckout}
+                  >
+                    Checkout
+                  </Button>
+                </div>
               </Card>
             </>
           )}
+
+          <Modal
+            title="Confirm Purchase"
+            open={checkoutModalOpen}
+            onOk={handleConfirmCheckout}
+            onCancel={() => setCheckoutModalOpen(false)}
+            okText="Confirm Purchase"
+            cancelText="Cancel"
+          >
+            <p>Are you sure you want to complete this purchase?</p>
+            <p className="font-semibold mt-2">Total: ${totalAmount.toFixed(2)}</p>
+          </Modal>
         </div>
       </Content>
     </Layout>

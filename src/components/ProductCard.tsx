@@ -1,7 +1,8 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { EyeFilled } from '@ant-design/icons';
+import { EyeFilled, ShoppingCartOutlined } from '@ant-design/icons';
 import { notification } from 'antd';
+import { useCart } from '@/contexts/CartContext';
 
 interface Product {
   id: number;
@@ -17,12 +18,24 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const { addToCart } = useCart();
+
   const handleViewDetails = () => {
     notification.error({
       message: 'No Description Available',
       description: 'This product does not have a description yet.',
       placement: 'topRight',
       duration: 3,
+    });
+  };
+
+  const handleBuy = () => {
+    addToCart(product);
+    notification.success({
+      message: 'Added to Cart',
+      description: `${product.title} has been added to your cart.`,
+      placement: 'topRight',
+      duration: 2,
     });
   };
 
@@ -43,7 +56,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <EyeFilled className="text-lg" />
         </Button>
       </div>
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-3">
         <h3 className="font-semibold text-card-foreground line-clamp-2 min-h-[3rem]">
           {product.title}
         </h3>
@@ -55,6 +68,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {product.category}
           </span>
         </div>
+        <Button 
+          className="w-full" 
+          onClick={handleBuy}
+        >
+          <ShoppingCartOutlined className="mr-2 text-base" />
+          Buy
+        </Button>
       </div>
     </Card>
   );
