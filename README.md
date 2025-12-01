@@ -1,73 +1,260 @@
-# Welcome to your Lovable project
+# 🛍️ Online Store - React & Ant Design
 
-## Project info
+A modern e-commerce application built with React, TypeScript, Ant Design, and Tailwind CSS. This project integrates product management, client management, and shopping cart functionalities with a beautiful dark/light theme toggle.
 
-**URL**: https://lovable.dev/projects/5e645da5-8271-4883-b49f-b85bc76f7789
+---
 
-## How can I edit this code?
+## 📋 Table of Contents
 
-There are several ways of editing your application.
+- [Features](#-features)
+- [Technologies](#-technologies)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Functionalities](#-functionalities)
+- [API Integration](#-api-integration)
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5e645da5-8271-4883-b49f-b85bc76f7789) and start prompting.
+## ✨ Features
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🏠 HomePage
+- Displays top 5 products from Fake Store API
+- Responsive product cards with images and prices
+- Quick navigation to product details
 
-**Use your preferred IDE**
+### 🛒 Products Page
+- Complete product listing with search functionality
+- Add, edit, and delete products
+- Product registration with form validation
+- Shopping cart integration ("Buy" button)
+- Data persistence using LocalStorage
+- Edit drawer for updating product details
+- Delete confirmation with Popconfirm
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 👥 Clients Page
+- Client listing with table view
+- Add new clients via modal
+- Edit existing clients with drawer
+- Delete clients with confirmation
+- LocalStorage persistence
+- Form validation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🛒 Shopping Cart
+- Add/remove products
+- View quantity and total price
+- Clear cart functionality
+- Checkout process with confirmation
+- Persistent cart data (LocalStorage)
+- Cart badge showing item count
 
-Follow these steps:
+### 🎨 Theme Support
+- Light and dark mode toggle
+- Consistent theming across all pages
+- Ant Design integration with custom theme tokens
+- Smooth theme transitions
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🚀 Technologies
 
-# Step 3: Install the necessary dependencies.
-npm i
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Ant Design** - UI component library
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Additional UI components
+- **React Router** - Client-side routing
+- **React Context API** - State management (Cart)
+- **LocalStorage** - Data persistence
+- **Fake Store API** - Product data source
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+---
+
+## 🏁 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser**
+   ```
+   Navigate to: http://localhost:8080
+   ```
+
+### Build for Production
+
+```bash
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+The production-ready files will be in the `dist` folder.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Preview Production Build
 
-**Use GitHub Codespaces**
+```bash
+npm run preview
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 📁 Project Structure
 
-This project is built with:
+```
+src/
+├── components/
+│   ├── Header.tsx              # Navigation header with cart and theme toggle
+│   ├── ProductCard.tsx         # Reusable product card component
+│   └── ui/                     # shadcn/ui components
+├── contexts/
+│   └── CartContext.tsx         # Shopping cart state management
+├── pages/
+│   ├── Index.tsx               # Homepage (top 5 products)
+│   ├── Products.tsx            # Product management page
+│   ├── Clients.tsx             # Client management page
+│   ├── Cart.tsx                # Shopping cart page
+│   ├── Account.tsx             # User account page
+│   └── NotFound.tsx            # 404 page
+├── lib/
+│   └── utils.ts                # Utility functions
+├── App.tsx                     # Main app component with routing
+├── main.tsx                    # Application entry point
+└── index.css                   # Global styles and theme variables
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🎯 Functionalities
 
-Simply open [Lovable](https://lovable.dev/projects/5e645da5-8271-4883-b49f-b85bc76f7789) and click on Share -> Publish.
+### Product Management
+- **List Products**: View all products in a responsive grid
+- **Add Product**: Register new products with name, price, description, image
+- **Edit Product**: Update existing product details via drawer
+- **Delete Product**: Remove products with confirmation dialog
+- **Search Products**: Filter products by name
+- **Buy Product**: Add products to shopping cart
 
-## Can I connect a custom domain to my Lovable project?
+### Client Management
+- **List Clients**: View all clients in a table
+- **Add Client**: Register new clients with name, email, phone
+- **Edit Client**: Update client information via drawer
+- **Delete Client**: Remove clients with confirmation
 
-Yes, you can!
+### Shopping Cart
+- **Add to Cart**: Add products from product listings
+- **View Cart**: See all items with quantities and prices
+- **Remove Items**: Delete individual products from cart
+- **Clear Cart**: Empty entire cart
+- **Checkout**: Complete purchase with confirmation modal
+- **Cart Badge**: Real-time item count in header
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Theme Toggle
+- **Light/Dark Mode**: Switch between themes
+- **Persistent Theme**: Saves preference in LocalStorage
+- **Consistent Styling**: All components adapt to theme
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## 🌐 API Integration
+
+This project uses the **Fake Store API** for product data:
+
+- **Endpoint**: `https://fakestoreapi.com/products?limit=5`
+- **Usage**: Fetches top 5 products for the homepage
+- **Fallback**: Returns mock data if API is unavailable
+
+---
+
+## 💾 Data Persistence
+
+All data is stored in **LocalStorage**:
+
+- `products` - Product listings
+- `clients` - Client information
+- `cart` - Shopping cart items
+- `theme` - Theme preference (dark/light)
+
+---
+
+## 🎨 Customization
+
+### Theme Variables
+
+Edit `src/index.css` to customize colors:
+
+```css
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  /* ... more variables */
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  /* ... more variables */
+}
+```
+
+### Ant Design Theme
+
+Modify `src/App.tsx` ConfigProvider tokens to adjust Ant Design components.
+
+---
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+- Desktop (1920px+)
+- Laptop (1024px - 1919px)
+- Tablet (768px - 1023px)
+- Mobile (320px - 767px)
+
+---
+
+## 🤝 Contributing
+
+Feel free to fork this project and submit pull requests for any improvements.
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+---
+
+## 🔗 Links
+
+- **Live Demo**: [Your deployment URL]
+- **Lovable Project**: https://lovable.dev/projects/5e645da5-8271-4883-b49f-b85bc76f7789
+- **Fake Store API**: https://fakestoreapi.com/
+
+---
+
+## 📞 Support
+
+For issues or questions, please open an issue in the repository or contact the development team.
+
+---
+
+**Built with ❤️ using React and Ant Design**
